@@ -1,6 +1,7 @@
 """Tests for Level 1: Literal and Wildcard Patterns."""
 
 import pytest
+
 from adventure.game import create_game
 
 # Import the handler — tests will fail until participants implement it

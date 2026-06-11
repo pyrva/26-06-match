@@ -21,8 +21,6 @@ pattern Click((x, y)) is like writing:
 Your task: Replace each TODO line with the correct case patterns.
 """
 
-from adventure.events import Click, KeyPress, Quit, TextCommand
-from adventure.handlers_level3 import handle_command as level3_handle
 
 
 def handle_event(player, event) -> str:

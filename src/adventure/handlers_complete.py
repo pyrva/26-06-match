@@ -14,7 +14,6 @@ from __future__ import annotations
 from adventure.events import Click, KeyPress, Quit, TextCommand
 from adventure.game import Player
 
-
 # ---------------------------------------------------------------------------
 # Level 1: Literal and Wildcard Patterns
 # ---------------------------------------------------------------------------

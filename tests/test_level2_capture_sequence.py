@@ -1,8 +1,8 @@
 """Tests for Level 2: Capture and Sequence Patterns."""
 
 import pytest
-from adventure.game import create_game
 
+from adventure.game import create_game
 from adventure.handlers_level2 import handle_command
 
 

@@ -1,8 +1,8 @@
 """Tests for Level 3: OR Patterns and Guards."""
 
 import pytest
-from adventure.game import create_game
 
+from adventure.game import create_game
 from adventure.handlers_level3 import handle_command
 
 

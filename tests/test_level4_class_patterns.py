@@ -1,9 +1,9 @@
 """Tests for Level 4: Class Patterns."""
 
 import pytest
-from adventure.game import create_game
-from adventure.events import Click, KeyPress, Quit, TextCommand
 
+from adventure.events import Click, KeyPress, Quit, TextCommand
+from adventure.game import create_game
 from adventure.handlers_level4 import handle_event
 
 

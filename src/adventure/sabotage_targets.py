@@ -47,7 +47,7 @@ def computable_mapping(dice: tuple[int, int]) -> str:
         case (a, b) if a == b and a == 6:
             return "double six — critical hit!"
         case (a, b) if a == b:
-            return f"doubles — roll again"
+            return "doubles — roll again"
         case (a, b) if a + b >= 10:
             return "high roll — great success!"
         case _:
