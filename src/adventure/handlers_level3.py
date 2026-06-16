@@ -40,12 +40,9 @@ def handle_command(player, words: list[str]) -> str:
             return result
 
     # TODO: Replace the pass statement below with a match/case block that uses:
-    #
-    # 1. OR patterns with `as` for direction aliases:
-    #    case ["go", ("north" | "n") as direction]:
-    #    case ["go", ("south" | "s") as direction]:
-    #    case ["go", ("east" | "e") as direction]:
-    #    case ["go", ("west" | "w") as direction]:
+    # BUG:
+    # cmd-L is go to line!!!!
+
 
     # 2. A guarded case for any valid exit direction:
     #    case ["go", direction] if direction in player.current_room.exits:
@@ -65,10 +62,33 @@ def handle_command(player, words: list[str]) -> str:
     #       guarded general-direction case.
 
     # For direction aliases: normalize them — "n" should become "north"
-    # for the actual movement. The match gives you the alias, so map it, then
+    # for the actual movemen,t. The match gives you the alias, so map it, then
     # move the player:
     #   direction_map = {"n": "north", "s": "south", "e": "east", "w": "west"}
     #   actual = direction_map.get(direction, direction)
     #   player.move(actual)
     #   return player.current_room.look()
-    pass
+    direction_map = {"n": "north", "s": "south", "e": "east", "w": "west"}
+    valid_directions = {*direction_map.keys(), *direction_map.values()}
+
+    match words:
+        case ["go",  direction]  if direction in valid_directions:
+            if direction in direction_map:
+                direction = direction_map[direction]
+            if direction in player.current_room.exits:
+                player.move(direction)
+                return player.current_room.look()
+            else:
+                return f"Can't go {direction}"
+        case ['go', direction]:
+            return f"Can't go {direction}"
+        case [1, something]:
+            print(f'This is {something}')
+        case ['get' | 'take'| 'grab', item]:
+            return player.take(item)
+
+
+
+
+
+

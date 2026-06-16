@@ -51,4 +51,20 @@ def handle_command(player, command: str) -> str:
 
     # Remember: pattern matching is case-sensitive!
     # "LOOK" should NOT match "look" — it should fall to the wildcard.
-    pass
+    match command:
+        case "quit":
+            player.running = False
+            return ("Goodbye!")
+        case "look":
+            return player.current_room.look()
+        case "help":
+            return HELP_TEXT
+        case "inventory":
+            return player.show_inventory()
+        case _:
+            return "I don't understand that command."
+
+
+
+
+

@@ -56,12 +56,6 @@ def handle_command(player, words: list[str]) -> str:
     #   case ["examine", target]:    → describe an item or feature
     #   case _:                      → catch-all for unknown commands
 
-    # For ["go", direction]:
-    #   player.move(direction) moves the player and returns True if it worked
-    #   (False if there's no exit that way).
-    #   If it moved: return the new room's description via player.current_room.look()
-    #   If not: return f"You can't go {direction}."
-
     # For ["take", item_name]:
     #   player.take(item_name) does it all — checks your inventory, finds the
     #   item in the room, moves it, and returns the right message. Just return it.
@@ -73,4 +67,16 @@ def handle_command(player, words: list[str]) -> str:
     # Remember: capture patterns BIND variables — they don't compare them!
     # case ["go", direction]: means "match a 2-element list starting with 'go'
     # and bind the second element to the variable 'direction'."
-    pass
+    match words:
+        case ['go', direction]:
+            if player.move(direction):
+                return player.current_room.look()
+            else:
+                return f"You can't go {direction}."
+        case ["take", item_name]:
+            return player.take(item_name)
+        case ["examine", target]:
+            return player.examine(target)
+        case _:
+            return "I don't understand that command."
+
