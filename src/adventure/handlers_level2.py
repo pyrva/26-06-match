@@ -49,29 +49,29 @@ def handle_command(player, words: list[str]) -> str:
 
     # TODO: Replace the pass statement below with a match/case block
     # that handles multi-word commands using capture and sequence patterns.
-    #
+
     # HINT: Use `match words:` with patterns like:
     #   case ["go", direction]:      → move the player
     #   case ["take", item_name]:    → pick up an item from the room
     #   case ["examine", target]:    → describe an item or feature
     #   case _:                      → catch-all for unknown commands
-    #
+
     # For ["go", direction]:
     #   Check if direction is in player.current_room.exits.
     #   If yes: move the player and return the new room's description via .look()
     #   If no: return f"You can't go {direction}."
-    #
+
     # For ["take", item_name]:
     #   Find the item in the current room's items list.
     #   If found: remove from room, add to player inventory, return f"You take the {item_name}."
     #   If already in inventory: return f"You already have the {item_name}."
     #   If not found: return f"You don't see {item_name} here."
-    #
+
     # For ["examine", target]:
     #   Check room items and player inventory for a matching item.
     #   If found: return item.description
     #   If not found: return f"You don't see {target} here."
-    #
+
     # Remember: capture patterns BIND variables — they don't compare them!
     # case ["go", direction]: means "match a 2-element list starting with 'go'
     # and bind the second element to the variable 'direction'."

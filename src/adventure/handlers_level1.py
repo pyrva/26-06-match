@@ -28,18 +28,18 @@ def handle_command(player, command: str) -> str:
     Returns:
         A string response to display to the player.
     """
-    # TODO: Replace the pass statement below with a match/case block
-    # that handles "quit", "look", "help", "inventory", and a wildcard default.
-    #
+    # TODO: Replace the pass statement below with a match/case block that
+    #       handles "quit", "look", "help", "inventory", and a wildcard default.
+
     # HINT: Use `match command:` and literal patterns like `case "quit":`.
     #       Use `case _:` for the default (wildcard) case.
-    #
+
     # For "quit", set player.running = False and return "Goodbye!"
     # For "look", return player.current_room.look()
     # For "help", return the help text shown below
     # For "inventory", return player.show_inventory()
     # For anything else, return "I don't understand that command."
-    #
+
     # Remember: pattern matching is case-sensitive!
     # "LOOK" should NOT match "look" — it should fall to the wildcard.
     pass

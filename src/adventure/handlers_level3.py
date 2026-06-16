@@ -46,22 +46,22 @@ def handle_command(player, words: list[str]) -> str:
     #    case ["go", ("south" | "s") as direction]:
     #    case ["go", ("east" | "e") as direction]:
     #    case ["go", ("west" | "w") as direction]:
-    #
+
     # 2. A guarded case for any valid exit direction:
     #    case ["go", direction] if direction in player.current_room.exits:
-    #
+
     # 3. A catch-all for invalid directions:
     #    case ["go", _]:
-    #
+
     # 4. OR patterns for command synonyms:
     #    case ["get" | "take" | "grab", item_name]:
-    #
+
     # 5. Cases from Level 2 (examine) and a wildcard default
-    #
+
     # HINT: Order matters! Put specific patterns before general ones.
     #       The OR-pattern direction cases should come before the
     #       guarded general-direction case.
-    #
+
     # For direction aliases: normalize them — "n" should become "north"
     # for the actual movement. The match gives you the alias, so map it:
     #   direction_map = {"n": "north", "s": "south", "e": "east", "w": "west"}

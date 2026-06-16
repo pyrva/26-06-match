@@ -81,6 +81,7 @@ class Player:
 # Game world construction
 # ---------------------------------------------------------------------------
 
+
 def create_game() -> Player:
     """Create the text adventure world and return the player.
 

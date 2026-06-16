@@ -18,6 +18,7 @@ from adventure.game import Player
 # Level 1: Literal and Wildcard Patterns
 # ---------------------------------------------------------------------------
 
+
 def handle_level1(player: Player, command: str) -> str:
     """Handle single-word commands with literal and wildcard patterns."""
     help_text = (
@@ -48,6 +49,7 @@ def handle_level1(player: Player, command: str) -> str:
 # ---------------------------------------------------------------------------
 # Level 2: Capture and Sequence Patterns
 # ---------------------------------------------------------------------------
+
 
 def _find_item(name: str, player: Player):
     """Find an item by name in the room or player inventory."""
@@ -205,6 +207,7 @@ def handle_level4(player: Player, event) -> str:
 # ---------------------------------------------------------------------------
 # Unified entry point
 # ---------------------------------------------------------------------------
+
 
 def handle_command(player: Player, words: list[str]) -> str:
     """Main command handler — delegates to the appropriate level.

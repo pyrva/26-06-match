@@ -22,7 +22,6 @@ Your task: Replace each TODO line with the correct case patterns.
 """
 
 
-
 def handle_event(player, event) -> str:
     """Handle a game event using class patterns.
 
