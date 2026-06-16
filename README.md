@@ -57,3 +57,7 @@ uv run python -m adventure
 - `src/adventure/handlers_levelN.py` — Exercise files with TODO markers
 - `src/adventure/handlers_complete.py` — Full solution reference
 - `src/adventure/sabotage_targets.py` — Sabotage Mode exercise targets
+
+## Other sources
+
+- Python's [test suite for pattern matching](https://github.com/python/cpython/blob/ea4c85552bb7883e1d6c808281c1f46aca86aeab/Lib/test/test_patma.py)
