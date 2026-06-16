@@ -63,15 +63,12 @@ def handle_command(player, words: list[str]) -> str:
     #   If not: return f"You can't go {direction}."
 
     # For ["take", item_name]:
-    #   Find the item in the current room's items list.
-    #   If found: remove from room, add to player inventory, return f"You take the {item_name}."
-    #   If already in inventory: return f"You already have the {item_name}."
-    #   If not found: return f"You don't see {item_name} here."
+    #   player.take(item_name) does it all — checks your inventory, finds the
+    #   item in the room, moves it, and returns the right message. Just return it.
 
     # For ["examine", target]:
-    #   Check room items and player inventory for a matching item.
-    #   If found: return item.description
-    #   If not found: return f"You don't see {target} here."
+    #   player.examine(target) searches the room then your inventory and returns
+    #   the item's description (or "You don't see {target} here."). Just return it.
 
     # Remember: capture patterns BIND variables — they don't compare them!
     # case ["go", direction]: means "match a 2-element list starting with 'go'

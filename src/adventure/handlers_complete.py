@@ -51,17 +51,6 @@ def handle_level1(player: Player, command: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def _find_item(name: str, player: Player):
-    """Find an item by name in the room or player inventory."""
-    for item in player.current_room.items:
-        if item.name == name:
-            return item, "room"
-    for item in player.inventory:
-        if item.name == name:
-            return item, "inventory"
-    return None, None
-
-
 def handle_level2(player: Player, words: list[str]) -> str:
     """Handle multi-word commands with capture and sequence patterns."""
     # Delegate single-word commands to Level 1
@@ -77,23 +66,10 @@ def handle_level2(player: Player, words: list[str]) -> str:
             return f"You can't go {direction}."
 
         case ["take", item_name] | ["get", item_name] | ["grab", item_name]:
-            if player.has_item(item_name):
-                return f"You already have the {item_name}."
-            for item in player.current_room.items:
-                if item.name == item_name:
-                    player.current_room.remove_item(item)
-                    player.add_to_inventory(item)
-                    return f"You take the {item_name}."
-            return f"You don't see {item_name} here."
+            return player.take(item_name)
 
         case ["examine", target]:
-            for item in player.current_room.items:
-                if item.name == target:
-                    return item.description
-            for item in player.inventory:
-                if item.name == target:
-                    return item.description
-            return f"You don't see {target} here."
+            return player.examine(target)
 
         case _:
             return "I don't understand that command."
@@ -147,23 +123,10 @@ def handle_level3(player: Player, words: list[str]) -> str:
 
         # Command synonyms using OR patterns
         case ["get" | "take" | "grab", item_name]:
-            if player.has_item(item_name):
-                return f"You already have the {item_name}."
-            for item in player.current_room.items:
-                if item.name == item_name:
-                    player.current_room.remove_item(item)
-                    player.add_to_inventory(item)
-                    return f"You take the {item_name}."
-            return f"You don't see {item_name} here."
+            return player.take(item_name)
 
         case ["examine", target]:
-            for item in player.current_room.items:
-                if item.name == target:
-                    return item.description
-            for item in player.inventory:
-                if item.name == target:
-                    return item.description
-            return f"You don't see {target} here."
+            return player.examine(target)
 
         case _:
             return "I don't understand that command."

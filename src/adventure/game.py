@@ -35,6 +35,10 @@ class Room:
         """Remove an item from this room (e.g., when picked up)."""
         self.items.remove(item)
 
+    def find_item(self, name: str) -> Item | None:
+        """Return the item in this room with the given name, or None."""
+        return next((item for item in self.items if item.name == name), None)
+
     def look(self) -> str:
         """Return a description of the room, its exits, and visible items."""
         lines = [f"You are in the {self.name}.", self.description]
@@ -86,6 +90,27 @@ class Player:
             self.current_room = self.current_room.exits[direction]
             return True
         return False
+
+    def take(self, item_name: str) -> str:
+        """Pick up an item by name from the current room.
+
+        Returns a message: already carried, taken, or not present here.
+        """
+        if self.has_item(item_name):
+            return f"You already have the {item_name}."
+        item = self.current_room.find_item(item_name)
+        if item is None:
+            return f"You don't see {item_name} here."
+        self.current_room.remove_item(item)
+        self.add_to_inventory(item)
+        return f"You take the {item_name}."
+
+    def examine(self, target: str) -> str:
+        """Describe an item by name if it's in the room or your inventory."""
+        item = self.current_room.find_item(target)
+        if item is None:
+            item = next((i for i in self.inventory if i.name == target), None)
+        return item.description if item is not None else f"You don't see {target} here."
 
 
 # ---------------------------------------------------------------------------

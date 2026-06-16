@@ -39,6 +39,16 @@ class TestRoom:
         room.remove_item(sword)
         assert sword not in room.items
 
+    def test_find_item_by_name(self):
+        room = Room("room", "A room.")
+        sword = Item("sword", "Sharp.")
+        room.add_item(sword)
+        assert room.find_item("sword") is sword
+
+    def test_find_item_missing_returns_none(self):
+        room = Room("room", "A room.")
+        assert room.find_item("shield") is None
+
     def test_look_describes_room_exits_and_items(self):
         room = Room("kitchen", "A cozy kitchen.")
         garden = Room("garden", "A garden.")
@@ -93,6 +103,46 @@ class TestPlayer:
         player = Player(hall)
         assert player.move("up") is False
         assert player.current_room is hall
+
+    def test_take_moves_item_from_room_to_inventory(self):
+        room = Room("room", "A room.")
+        room.add_item(Item("sword", "A sharp sword."))
+        player = Player(room)
+        result = player.take("sword")
+        assert "take" in result.lower()
+        assert player.has_item("sword")
+        assert room.find_item("sword") is None
+
+    def test_take_when_already_carried(self):
+        room = Room("room", "A room.")
+        player = Player(room)
+        player.add_to_inventory(Item("sword", "A sharp sword."))
+        result = player.take("sword")
+        assert "already" in result.lower()
+
+    def test_take_missing_item(self):
+        room = Room("room", "A room.")
+        player = Player(room)
+        result = player.take("dragon")
+        assert "don't see" in result.lower()
+        assert not player.has_item("dragon")
+
+    def test_examine_item_in_room(self):
+        room = Room("room", "A room.")
+        room.add_item(Item("sword", "A sharp sword."))
+        player = Player(room)
+        assert player.examine("sword") == "A sharp sword."
+
+    def test_examine_item_in_inventory(self):
+        room = Room("room", "A room.")
+        player = Player(room)
+        player.add_to_inventory(Item("sword", "A sharp sword."))
+        assert player.examine("sword") == "A sharp sword."
+
+    def test_examine_missing_item(self):
+        room = Room("room", "A room.")
+        player = Player(room)
+        assert "don't see" in player.examine("unicorn").lower()
 
 
 class TestCreateGame:

@@ -154,8 +154,8 @@ match command:
 | Struggle | Hint |
 |----------|------|
 | "How do I move the player?" | `player.move(direction)` returns `True`/`False` — if `True`, `return player.current_room.look()`; else `f"You can't go {direction}."` |
-| "take doesn't work" | Remember to remove the item from the room AND add to inventory |
-| "examine can't find items I'm carrying" | Check both `player.current_room.items` and `player.inventory` |
+| "take doesn't work" | `player.take(item_name)` handles the inventory check, moving the item, and the message — just `return` it |
+| "examine can't find items I'm carrying" | `player.examine(target)` searches the room then your inventory for you — just `return` it |
 | "go with extra words fails" | That's correct! `case ["go", direction]:` only matches 2-element lists |
 
 ### Pulse Check (60 seconds)

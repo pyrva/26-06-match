@@ -54,16 +54,21 @@ def handle_command(player, words: list[str]) -> str:
     #    case ["go", _]:
 
     # 4. OR patterns for command synonyms:
-    #    case ["get" | "take" | "grab", item_name]:
+    #    case ["get" | "take" | "grab", item_name]:  →  return player.take(item_name)
 
-    # 5. Cases from Level 2 (examine) and a wildcard default
+    # 5. Examine (same as Level 2) and a wildcard default:
+    #    case ["examine", target]:  →  return player.examine(target)
+    #    case _:                    →  return "I don't understand that command."
 
     # HINT: Order matters! Put specific patterns before general ones.
     #       The OR-pattern direction cases should come before the
     #       guarded general-direction case.
 
     # For direction aliases: normalize them — "n" should become "north"
-    # for the actual movement. The match gives you the alias, so map it:
+    # for the actual movement. The match gives you the alias, so map it, then
+    # move the player:
     #   direction_map = {"n": "north", "s": "south", "e": "east", "w": "west"}
     #   actual = direction_map.get(direction, direction)
+    #   player.move(actual)
+    #   return player.current_room.look()
     pass
