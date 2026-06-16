@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Predict Sheet — PyRVA Pattern Matching Dojo</title>
+  <style>
+    :root { --ink:#1a1a1a; --mute:#666; --rule:#ccc; --box:#f6f6f4; }
+    * { box-sizing: border-box; }
+    html { font-size: 11pt; }
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink); margin: 0; line-height: 1.35;
+      max-width: 8.5in; margin: 0 auto; padding: 1.2cm 1.4cm;
+    }
+    header { border-bottom: 2px solid var(--ink); padding-bottom: .4em; margin-bottom: .8em; }
+    header h1 { font-size: 1.35rem; margin: 0; }
+    header p { margin: .25em 0 0; color: var(--mute); font-size: .82rem; }
+    .instructions {
+      background: #fff8e1; border: 1px solid #e8d9a0; border-radius: 4px;
+      padding: .5em .7em; margin: .8em 0 1.1em; font-size: .85rem;
+    }
+    .instructions strong { color: #8a6d00; }
+
+    .level { break-inside: avoid; page-break-inside: avoid; margin-bottom: 1.1em; }
+    .level h2 { font-size: 1.02rem; margin: 0 0 .35em; }
+    .level h2 .num {
+      display: inline-block; background: var(--ink); color: #fff;
+      width: 1.4em; height: 1.4em; line-height: 1.4em; text-align: center;
+      border-radius: 50%; font-size: .8rem; margin-right: .4em;
+    }
+    .pulse h2 .num { background: #6b3fa0; }
+    .pulse h2 .tag { color:#6b3fa0; font-weight:600; font-size:.78rem; }
+
+    pre {
+      background: var(--box); border: 1px solid var(--rule); border-radius: 4px;
+      padding: .55em .7em; margin: .2em 0 .4em; overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: .82rem; line-height: 1.4; white-space: pre;
+    }
+    pre .c { color: #999; }   /* comment */
+
+    ol.predict { margin: .2em 0 .3em; padding-left: 1.4em; }
+    ol.predict li { margin: .18em 0; font-size: .88rem; }
+    .blank {
+      display: inline-block; min-width: 14em; border-bottom: 1px dotted #999;
+      height: 1.05em; vertical-align: bottom;
+    }
+    .test {
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: .72rem; color: var(--mute); background: #f0f0ee;
+      border-radius: 3px; padding: .15em .45em; display: inline-block; margin-top: .15em;
+    }
+    footer {
+      margin-top: 1.2em; padding-top: .5em; border-top: 1px solid var(--rule);
+      color: var(--mute); font-size: .76rem;
+    }
+    footer .big { color: var(--ink); font-weight: 600; }
+
+    @media print {
+      body { padding: .9cm 1cm; max-width: none; }
+      .instructions { background: #fffde6 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      pre, .test { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .level { break-inside: avoid; page-break-inside: avoid; }
+      a { color: var(--ink); text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Predict Sheet &mdash; Pattern Matching Dojo</h1>
+    <p>PyRVA &bull; Structural Pattern Matching &bull; keep this in front of you during the predict cycles</p>
+  </header>
+
+  <div class="instructions">
+    <strong>How to use:</strong> Read each snippet with your pair. Predict the answer
+    <em>before</em> the reveal &mdash; write it on the line. Getting it wrong is the
+    point: the surprise is what makes it stick. Don&rsquo;t peek ahead.
+  </div>
+
+  <!-- LEVEL 1 -->
+  <section class="level">
+    <h2><span class="num">1</span>Literal &amp; Wildcard</h2>
+<pre><code>match command:
+    case "quit":
+        return "Goodbye!"
+    case "look":
+        return player.current_room.look()
+    case _:
+        return "I don't understand that command."</code></pre>
+    <ol class="predict">
+      <li><code>handle_command(player, "look")</code> returns? <span class="blank"></span></li>
+      <li><code>handle_command(player, "LOOK")</code> returns? <span class="blank"></span></li>
+      <li><code>handle_command(player, "fly")</code> returns? <span class="blank"></span></li>
+    </ol>
+    <div class="test">uv run pytest tests/test_level1_literal_wildcard.py -v</div>
+  </section>
+
+  <!-- LEVEL 2 -->
+  <section class="level">
+    <h2><span class="num">2</span>Capture &amp; Sequence</h2>
+<pre><code>command = "go north".split()   <span class="c"># → ["go", "north"]</span>
+
+match command:
+    case ["go", direction]:
+        print(direction)</code></pre>
+    <ol class="predict">
+      <li>What is <code>direction</code>? <span class="blank"></span></li>
+      <li><code>"go".split()</code> (just <code>["go"]</code>) &mdash; what happens? <span class="blank"></span></li>
+      <li><code>"go north east".split()</code> (3 elements) &mdash; what happens? <span class="blank"></span></li>
+    </ol>
+    <div class="test">uv run pytest tests/test_level2_capture_sequence.py -v</div>
+  </section>
+
+  <!-- LEVEL 2 PULSE CHECK -->
+  <section class="level pulse">
+    <h2><span class="num">?</span>Pulse check <span class="tag">&middot; sequence length</span></h2>
+<pre><code>match ["take", "sword", "of", "doom"]:
+    case ["take", item]:
+        print(f"Taking {item}")
+    case _:
+        print("Unknown")</code></pre>
+    <ol class="predict">
+      <li>What prints? <span class="blank"></span></li>
+    </ol>
+  </section>
+
+  <!-- LEVEL 3 -->
+  <section class="level">
+    <h2><span class="num">3</span>OR Patterns &amp; Guards</h2>
+<pre><code>match words:
+    case ["go", ("north" | "n") as direction]:
+        move(direction)
+    case ["go", direction] if direction in player.current_room.exits:
+        move(direction)
+    case ["go", _]:
+        return "You can't go that way."</code></pre>
+    <ol class="predict">
+      <li><code>["go", "n"]</code> &mdash; what does <code>direction</code> hold? <span class="blank"></span></li>
+      <li><code>["go", "west"]</code> when there&rsquo;s no west exit &mdash; what happens? <span class="blank"></span></li>
+      <li><code>["go", "up"]</code> &mdash; what happens? <span class="blank"></span></li>
+    </ol>
+    <div class="test">uv run pytest tests/test_level3_or_guards.py -v</div>
+  </section>
+
+  <!-- LEVEL 4 -->
+  <section class="level">
+    <h2><span class="num">4</span>Class Patterns</h2>
+<pre><code>match event:
+    case Click((x, y)):
+        print(f"Clicked at {x}, {y}")
+    case KeyPress("q") | KeyPress("Q"):
+        print("Quit!")
+    case KeyPress(key) if key in "wasd":
+        print(f"Move: {key}")</code></pre>
+    <ol class="predict">
+      <li><code>Click((3, 7))</code> &mdash; what are <code>x</code> and <code>y</code>? <span class="blank"></span></li>
+      <li>Does <code>KeyPress("q")</code> match the OR pattern? <span class="blank"></span></li>
+      <li>Does <code>KeyPress("w")</code> match the guarded case? <span class="blank"></span></li>
+      <li>What does the case for <code>Quit()</code> look like? <span class="blank"></span></li>
+    </ol>
+    <div class="test">uv run pytest tests/test_level4_class_patterns.py -v</div>
+  </section>
+
+  <!-- LEVEL 4 PULSE CHECK -->
+  <section class="level pulse">
+    <h2><span class="num">?</span>Pulse check <span class="tag">&middot; order matters</span></h2>
+<pre><code>match KeyPress("w"):
+    case KeyPress("q") | KeyPress("Q"):
+        print("quit")
+    case KeyPress(key) if key in "wasd":
+        print(f"move {key}")
+    case KeyPress(key):
+        print(f"unknown: {key}")</code></pre>
+    <ol class="predict">
+      <li>What prints? <span class="blank"></span></li>
+    </ol>
+  </section>
+
+  <footer>
+    <span class="big">One question answers everything:</span>
+    &ldquo;What would unpacking do here?&rdquo; &nbsp; Variables are assignment
+    targets, not comparisons. <code>_</code> is the wildcard. First match wins.<br>
+    Tests start failing-to-pass &mdash; <code>uv run pytest</code> at the start should show
+    21 passing, the rest failing (that&rsquo;s the TODOs). Run a level&rsquo;s tests as you finish it.
+  </footer>
+
+</body>
+</html>
