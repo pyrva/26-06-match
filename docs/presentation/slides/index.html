@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>From if to match — PyRVA Pattern Matching</title>
+
+  <link rel="stylesheet" href="reveal/reset.css">
+  <link rel="stylesheet" href="reveal/reveal.css">
+  <link rel="stylesheet" href="reveal/theme/black.css" id="theme">
+  <link rel="stylesheet" href="reveal/plugin/highlight/monokai.css">
+
+  <style>
+    .reveal section { text-align: left; }
+    .reveal h1, .reveal h2, .reveal h3 { text-transform: none; letter-spacing: normal; }
+    .reveal pre { width: 100%; font-size: 0.72em; line-height: 1.4; margin: 0.4em 0; }
+    .reveal pre code { padding: 0.6em 0.7em; }
+    .reveal code { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; }
+    .reveal p { margin: 0.35em 0; }
+    .reveal .slides section .punch { color: #ff6b6b; font-weight: bold; }
+    .reveal .slides section .good  { color: #6bd5a8; font-weight: bold; }
+    .reveal .slides section .kicker { color: #9aa0a6; font-style: italic; }
+    .reveal .title-slide { text-align: center; }
+    .reveal .title-slide h1 { font-size: 1.9em; margin-bottom: 0.2em; }
+    .reveal .title-slide h2 { font-size: 1.7em; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1 — Title -->
+      <section class="title-slide">
+        <h1>More than a <code>match</code> </h1>
+        <p class="kicker">The magic that is structural pattern matching in Python</p>
+        <p><small>PyRVA &bull; June 2026</small></p>
+        <aside class="notes">
+          Three-minute setup before we go hands-on. I'll show what switch
+          actually does in other languages, and why Python's match is a different
+          thing entirely — not a switch.
+        </aside>
+      </section>
+
+      <!-- 2 — The ladder -->
+      <section>
+        <h3>Every language has this</h3>
+        <pre><code class="language-python" data-trim data-line-numbers>
+if command == "quit":
+    ...
+elif command == "look":
+    ...
+elif command == "go":
+    ...
+else:
+    ...
+        </code></pre>
+        <p class="fragment">We keep typing <code>command ==</code> &hellip; <code>command ==</code> &hellip; <code>command ==</code></p>
+        <p class="fragment punch">Comparing ONE value against many possibilities.</p>
+        <aside class="notes">
+          Every language on Earth has this. It works. But notice we keep typing
+          command == over and over. We're comparing one value against a bunch of
+          possibilities. Any time you catch yourself writing that ladder, most
+          languages hand you a tool to tidy it up. In C, Java, JavaScript — switch.
+        </aside>
+      </section>
+
+      <!-- 3 — Enter switch -->
+      <section>
+        <h3>JavaScript: tidy it up with <code>switch</code></h3>
+        <pre><code class="language-javascript" data-trim data-line-numbers>
+switch (command) {
+  case "quit":
+    console.log("Goodbye");
+    break;
+  case "look":
+    console.log("You see a key.");
+    break;
+  default:
+    console.log("Huh?");
+}
+        </code></pre>
+        <p class="fragment">Cleaner &mdash; but there are two things <code>switch</code> does that differ from  Python.</p>
+        <aside class="notes">
+          Same idea in JavaScript — a switch. Cleaner. But there are two things
+          switch does that matter for tonight, and you've probably hit both.
+        </aside>
+      </section>
+
+      <!-- 4 — Stacked cases -->
+      <section>
+        <h3>"Multiple matches" &mdash; stack the labels</h3>
+        <pre><code class="language-javascript" data-trim data-line-numbers>
+switch (day) {
+  case "Mon":
+  case "Tue":
+  case "Wed":
+  case "Thu":
+  case "Fri":
+    console.log("Weekday");   // all five reach here
+    break;
+  case "Sat":
+  case "Sun":
+    console.log("Weekend");
+    break;
+}
+        </code></pre>
+        <p class="fragment good">Several cases &rarr; one block.</p>
+        <aside class="notes">
+          If five days are all weekdays, you just stack the labels. That's the
+          "multiple matches" idea — several cases feeding one block.
+        </aside>
+      </section>
+
+      <!-- 5 — The footgun -->
+      <section>
+        <h3>The famous footgun &mdash; forget the <code>break</code></h3>
+        <pre><code class="language-javascript" data-trim data-line-numbers="2-5">
+switch (command) {
+  case "quit":
+    console.log("Goodbye");
+    // no break — oops
+  case "look":
+    console.log("You see a key.");
+    break;
+}
+        </code></pre>
+        <p class="fragment punch"><code>command === "quit"</code> prints BOTH lines &mdash; it keeps going until a <code>break</code>.</p>
+        <p class="fragment">One value, two case bodies. That's "do more than one thing."</p>
+        <aside class="notes">
+          Now watch this. Forget the break. command === quit prints both Goodbye
+          AND You see a key. It just keeps going. So a switch can literally do
+          more than one thing for a single value — it runs through every case
+          until it hits a break. That's flexible, and it's the most-forgotten
+          keyword in the C family. Half of all switch bugs are missing breaks.
+        </aside>
+      </section>
+
+      <!-- 6 — Switch in one line -->
+      <section>
+        <h3>Every <code>case</code> is just <code>===</code> in a costume</h3>
+        <pre><code class="language-javascript" data-trim data-line-numbers="2">
+switch (command) {
+  case "quit":
+    console.log("Goodbye");
+    break;
+  case "look":
+    console.log("You see a key.");
+    break;
+  default:
+    console.log("Huh?");
+}
+        </code></pre>
+        <p>Switch matches on <span class="good">value equality</span> &mdash; <em>only</em> value equality.</p>
+        <p class="fragment punch">It cannot ask: "is this a list that starts with <code>'go'</code>?"</p>
+        <aside class="notes">
+          Here's the key thing. Look at what every case is actually doing. case
+          quit just asks "is command strictly equal to quit?" — it's an equality
+          check in a costume. Switch matches on value equality, and only value
+          equality. It can't ask "is this a two-element list that starts with go?"
+          — only "is it exactly this value?"
+        </aside>
+      </section>
+
+      <!-- 7 — Enter match -->
+      <section>
+        <h3>Now Python &mdash; same idea, new word: <code>match</code></h3>
+        <pre><code class="language-python" data-trim data-line-numbers>
+match command:
+    case "quit":
+        return "Goodbye!"
+    case "go":
+        return "You move."
+    case _:
+        return "Huh?"
+        </code></pre>
+        <p class="fragment">Three differences. Each one breaks a switch assumption.</p>
+        <aside class="notes">
+          Now Python. Same idea, different word — match. Three differences. Each
+          one shatters a switch assumption.
+        </aside>
+      </section>
+
+      <!-- 8 — Break 1 -->
+      <section>
+        <h3>Break #1 &mdash; no fall-through. No <code>break</code>. Period.</h3>
+        <pre><code class="language-python" data-trim data-line-numbers>
+match command:
+    case "quit":
+        ...            # first match runs, then STOP
+    case "look":       # ← reached ONLY if "quit" didn't match
+        ...
+        </code></pre>
+        <p class="fragment good">That JS footgun is impossible in Python &mdash; one value can never fire two case bodies.</p>
+        <aside class="notes">
+          First — there is no break, because there is no fall-through. The first
+          case that matches runs, and then you're done. That JS footgun from a
+          minute ago is impossible in Python — one value can never trigger two
+          case blocks.
+        </aside>
+      </section>
+
+      <!-- 9 — Break 2 -->
+      <section>
+        <h3>Break #2 &mdash; "multiple matches" uses <code>|</code></h3>
+        <pre><code class="language-python" data-trim data-line-numbers>
+match day:
+    case "Mon" | "Tue" | "Wed" | "Thu" | "Fri":
+        return "Weekday"
+    case "Sat" | "Sun":
+        return "Weekend"
+        </code></pre>
+        <p class="fragment good">One line. Explicit. No empty stacked labels.</p>
+        <aside class="notes">
+          Remember the stacked weekdays? In Python you spell it with a pipe. One
+          line. Explicit. No empty case labels stacked on top of each other.
+        </aside>
+      </section>
+
+      <!-- 10 — Break 3, the money slide -->
+      <section>
+        <h3>Break #3 &mdash; the real difference: <span class="good">structure</span>, not equality</h3>
+        <pre><code class="language-python" data-trim data-line-numbers>
+match command:
+    case ["go", direction]:
+        return f"You go {direction}."
+        </code></pre>
+        <p class="fragment">This is <strong>not</strong> <code>command == ["go", direction]</code>.</p>
+        <p class="fragment">It asks: <em>"two-piece sequence whose first piece is <code>'go'</code>? Hand me the second."</em></p>
+        <p class="fragment punch"><code>["go", "north"]</code> &rarr; <code>direction = "north"</code></p>
+        <p class="fragment">Switch can't do this. <span class="good">At all.</span></p>
+        <aside class="notes">
+          Third — and this is the whole point of tonight. Watch this one line.
+          That case is NOT asking "is command exactly equal to this list?" It's
+          asking "is this a two-piece sequence whose first piece is the word go?
+          If so, hand me the second piece and call it direction." Run it with go
+          north — direction becomes north. Switch can't do this. There's no
+          version of it. It's a different operation: it takes data apart.
+        </aside>
+      </section>
+
+      <!-- 11 — The through-line -->
+      <section>
+        <h3>It's <em>this</em>, generalized</h3>
+        <pre><code class="language-python" data-trim>
+first, *rest = [1, 2, 3]   # first = 1, rest = [2, 3]
+        </code></pre>
+        <p class="fragment punch">A switch is <code>===</code> with extra <code>break</code>s to babysit.</p>
+        <p class="fragment good"><code>match</code> inspects the <em>shape</em> of your data and pulls it apart.</p>
+        <p class="fragment"><strong>Destructuring, not switching.</strong></p>
+        <aside class="notes">
+          <b>destructuring</b> -
+          match inspects the shape of your
+          data and pulls it apart. Tonight, that one idea —, not
+          switching — explains every single pattern we use.
+        </aside>
+      </section>
+
+      <!-- 12 — Bridge -->
+      <section class="title-slide">
+        <h2>Now let's build one.</h2>
+        <p class="kicker">&rarr; Level 1: <code>case "quit":</code> &nbsp;and&nbsp; <code>case _:</code></p>
+        <aside class="notes">
+          Hand off into the Unpacking Frame pair-predict on first star rest,
+          then into the Level 1 mob. Switch to the interactive workshop.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="reveal/reveal.js"></script>
+  <script src="reveal/plugin/highlight/highlight.js"></script>
+  <script src="reveal/plugin/notes/notes.js"></script>
+  <script>
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'slide',
+      width: 1280,
+      height: 720,
+      margin: 0.08,
+      plugins: [ RevealHighlight, RevealNotes ]
+    });
+  </script>
+</body>
+</html>
