@@ -72,8 +72,7 @@ def handle_level2(player: Player, words: list[str]) -> str:
 
     match words:
         case ["go", direction]:
-            if direction in player.current_room.exits:
-                player.current_room = player.current_room.exits[direction]
+            if player.move(direction):
                 return player.current_room.look()
             return f"You can't go {direction}."
 
@@ -119,27 +118,27 @@ def handle_level3(player: Player, words: list[str]) -> str:
         # Direction aliases using OR patterns with 'as'
         case ["go", ("north" | "n") as direction]:
             actual = DIRECTION_ALIASES.get(direction, direction)
-            player.current_room = player.current_room.exits[actual]
+            player.move(actual)
             return player.current_room.look()
 
         case ["go", ("south" | "s") as direction]:
             actual = DIRECTION_ALIASES.get(direction, direction)
-            player.current_room = player.current_room.exits[actual]
+            player.move(actual)
             return player.current_room.look()
 
         case ["go", ("east" | "e") as direction]:
             actual = DIRECTION_ALIASES.get(direction, direction)
-            player.current_room = player.current_room.exits[actual]
+            player.move(actual)
             return player.current_room.look()
 
         case ["go", ("west" | "w") as direction]:
             actual = DIRECTION_ALIASES.get(direction, direction)
-            player.current_room = player.current_room.exits[actual]
+            player.move(actual)
             return player.current_room.look()
 
         # Guard: any valid exit direction
         case ["go", direction] if direction in player.current_room.exits:
-            player.current_room = player.current_room.exits[direction]
+            player.move(direction)
             return player.current_room.look()
 
         # Catch-all for invalid directions (must come after the guarded case)

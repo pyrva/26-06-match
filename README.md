@@ -8,7 +8,7 @@ An interactive workshop on Python structural pattern matching (3.10+), built aro
 # Install dependencies
 uv sync
 
-# Run all tests (21 pass = game model, 54 fail = exercise TODOs)
+# Run all tests (passing = pre-built game model; failing = the exercise TODOs you'll solve)
 uv run pytest
 
 # Run a specific level's tests

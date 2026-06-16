@@ -57,9 +57,10 @@ def handle_command(player, words: list[str]) -> str:
     #   case _:                      → catch-all for unknown commands
 
     # For ["go", direction]:
-    #   Check if direction is in player.current_room.exits.
-    #   If yes: move the player and return the new room's description via .look()
-    #   If no: return f"You can't go {direction}."
+    #   player.move(direction) moves the player and returns True if it worked
+    #   (False if there's no exit that way).
+    #   If it moved: return the new room's description via player.current_room.look()
+    #   If not: return f"You can't go {direction}."
 
     # For ["take", item_name]:
     #   Find the item in the current room's items list.

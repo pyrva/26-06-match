@@ -76,6 +76,17 @@ class Player:
         item_list = ", ".join(item.name for item in self.inventory)
         return f"You are carrying: {item_list}"
 
+    def move(self, direction: str) -> bool:
+        """Move in a direction if there's an exit that way.
+
+        Returns True if the player moved; False if there is no exit in that
+        direction (in which case the player stays put).
+        """
+        if direction in self.current_room.exits:
+            self.current_room = self.current_room.exits[direction]
+            return True
+        return False
+
 
 # ---------------------------------------------------------------------------
 # Game world construction

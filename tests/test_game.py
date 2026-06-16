@@ -80,6 +80,20 @@ class TestPlayer:
         assert "sword" in result
         assert "key" in result
 
+    def test_move_to_valid_exit(self):
+        hall = Room("hall", "A hall.")
+        kitchen = Room("kitchen", "A kitchen.")
+        hall.add_exit("north", kitchen)
+        player = Player(hall)
+        assert player.move("north") is True
+        assert player.current_room is kitchen
+
+    def test_move_invalid_direction_returns_false_and_stays(self):
+        hall = Room("hall", "A hall.")
+        player = Player(hall)
+        assert player.move("up") is False
+        assert player.current_room is hall
+
 
 class TestCreateGame:
     def test_player_starts_in_entrance_hall(self):

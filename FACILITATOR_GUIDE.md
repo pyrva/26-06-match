@@ -25,7 +25,7 @@
 git clone <repo-url>
 cd pattern_matching
 uv sync
-uv run pytest  # verify environment (should see 21 pass, 54 fail — that's correct)
+uv run pytest  # verify environment
 ```
 
 ---
@@ -153,7 +153,7 @@ match command:
 
 | Struggle | Hint |
 |----------|------|
-| "How do I move the player?" | Check `direction in player.current_room.exits`, then `player.current_room = player.current_room.exits[direction]` |
+| "How do I move the player?" | `player.move(direction)` returns `True`/`False` — if `True`, `return player.current_room.look()`; else `f"You can't go {direction}."` |
 | "take doesn't work" | Remember to remove the item from the room AND add to inventory |
 | "examine can't find items I'm carrying" | Check both `player.current_room.items` and `player.inventory` |
 | "go with extra words fails" | That's correct! `case ["go", direction]:` only matches 2-element lists |
@@ -386,7 +386,7 @@ Take 4-5 responses. Validate each one.
 
 ```bash
 python --version  # Must be 3.10 or higher
-uv run pytest tests/test_game.py -v  # Should see 17 passed
+uv run pytest tests/test_game.py -v  # All should pass — this tests the game model, not the exercises
 ```
 
 ### Common Issues
