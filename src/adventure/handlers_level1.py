@@ -6,7 +6,7 @@ everything else.
 
 This is the ONE level where "switch thinking" works — you're matching
 on exact values. Enjoy it while it lasts!
-
+,
 Your task: Replace each TODO line with the correct case pattern.
 
 Available commands:
@@ -17,6 +17,15 @@ Available commands:
     - anything else → "I don't understand that command."
 """
 
+HELP_TEXT = (
+    "Available commands:\n"
+    "  look       — look around the room\n"
+    "  go <dir>   — move in a direction\n"
+    "  take <item>— pick up an item\n"
+    "  inventory  — check your inventory\n"
+    "  help       — show this help text\n"
+    "  quit       — exit the game"
+)
 
 def handle_command(player, command: str) -> str:
     """Handle a single-word command using literal and wildcard patterns.
